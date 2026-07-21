@@ -1,6 +1,8 @@
 "use client"
 
-import { Reveal } from "@/components/funnel/motion"
+import { useEffect } from "react"
+import { Reveal, useInView } from "@/components/funnel/motion"
+import { trackOnce } from "@/lib/analytics"
 import { PRICING, ROADMAP_TABLE, TIER } from "@/lib/institutional-config"
 import { StatusBadge } from "./status-badge"
 
@@ -35,13 +37,18 @@ function SeatsMeter({ seatsRemaining, seatCap }: { seatsRemaining: number; seatC
 export function InstPricing({ seatsRemaining, seatCap }: { seatsRemaining: number; seatCap: number }) {
   const pricing = PRICING[TIER]
   const soldOut = seatsRemaining <= 0
+  const { ref, inView } = useInView<HTMLElement>({ threshold: 0.25 })
+
+  useEffect(() => {
+    if (inView) trackOnce("pricing_view", { tier: TIER })
+  }, [inView])
 
   const scrollToApply = () => {
     document.getElementById("apply")?.scrollIntoView({ behavior: "smooth" })
   }
 
   return (
-    <section className="relative w-full py-28 md:py-40">
+    <section ref={ref} className="relative w-full py-28 md:py-40">
       <div className="mx-auto flex max-w-4xl flex-col gap-14 px-6">
         <div className="flex flex-col gap-6">
           <Reveal>

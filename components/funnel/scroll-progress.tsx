@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { trackScrollDepth } from "@/lib/analytics"
 
 export function ScrollProgress() {
   const [progress, setProgress] = useState(0)
@@ -10,7 +11,9 @@ export function ScrollProgress() {
     const update = () => {
       const scrollTop = window.scrollY
       const height = document.documentElement.scrollHeight - window.innerHeight
-      setProgress(height > 0 ? scrollTop / height : 0)
+      const p = height > 0 ? scrollTop / height : 0
+      setProgress(p)
+      trackScrollDepth(p)
       raf = 0
     }
     const onScroll = () => {

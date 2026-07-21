@@ -13,14 +13,8 @@ export function FooterSection() {
           <a href="/institutional" className="transition-colors hover:text-white">
             Institutional
           </a>
-          <a href="#" className="transition-colors hover:text-white">
-            Terms
-          </a>
-          <a href="#" className="transition-colors hover:text-white">
-            Privacy
-          </a>
-          <a href="#" className="transition-colors hover:text-white">
-            Contact
+          <a href="/#proof" className="transition-colors hover:text-white">
+            Verified data
           </a>
         </nav>
       </div>

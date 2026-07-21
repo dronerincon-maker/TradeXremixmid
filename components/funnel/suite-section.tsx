@@ -2,22 +2,38 @@
 
 import { useRef } from "react"
 import { gsap, useGSAP } from "@/lib/gsap"
+import { ALGORITHMS } from "@/lib/institutional-config"
 import { DecodeText, Reveal } from "./motion"
 
-type Algo = {
+/**
+ * Cards read from lib/institutional-config — the single source of truth for
+ * what is live vs on the roadmap. Nothing is tagged LIVE unless it runs today.
+ */
+type Card = {
   name: string
+  market: string
   fn: string
-  tag: string
-  roadmap?: boolean
+  tag: "LIVE" | "ROADMAP"
+  note?: string
 }
 
-const ALGOS: Algo[] = [
-  { name: "ORB V1–V4", fn: "Opening-range breakout across four regimes.", tag: "LIVE" },
-  { name: "Quant Pivots", fn: "Pivot-anchored mean-reversion on index futures.", tag: "LIVE" },
-  { name: "Trend Engine", fn: "Multi-asset trend-following with regime filters.", tag: "LIVE" },
-  { name: "Session Fade", fn: "Liquidity-sweep reversals at session extremes.", tag: "LIVE" },
-  { name: "Volatility Grid", fn: "Adaptive sizing keyed to realized volatility.", tag: "LIVE" },
-  { name: "+ four more as they ship", fn: "Founding members inherit every release.", tag: "ROADMAP", roadmap: true },
+const LIVE_CARDS: Card[] = ALGORITHMS.filter((a) => a.status === "live").map((a) => ({
+  name: a.name,
+  market: a.market,
+  fn: a.logic,
+  tag: "LIVE" as const,
+}))
+
+const ROADMAP_COUNT = ALGORITHMS.filter((a) => a.status !== "live").length
+
+const CARDS: Card[] = [
+  ...LIVE_CARDS,
+  {
+    name: `+ ${ROADMAP_COUNT} more on the quarterly drop schedule`,
+    market: "NQ · ES · Multi",
+    fn: "Trend Engine, Momentum Edge, and ORB Multi-Asset builds. Founding members inherit every release.",
+    tag: "ROADMAP",
+  },
 ]
 
 export function SuiteSection() {
@@ -68,23 +84,27 @@ export function SuiteSection() {
           <DecodeText text="THE SUITE" className="block text-xs font-medium uppercase text-zinc-500" duration={500} />
           <DecodeText
             as="h2"
-            text="Six institutional algorithms. One standard."
+            text={`${LIVE_CARDS.length} algorithms live today. Ten by design.`}
             className="mt-6 block max-w-3xl text-balance text-4xl font-semibold tracking-[-0.03em] text-white sm:text-5xl"
             duration={700}
           />
+          <Reveal delay={100} as="p" className="mt-5 max-w-2xl text-base text-zinc-400">
+            Every status below is honest: nothing is tagged live unless it runs today. The ORB builds are the
+            strategies whose backtests you just inspected.
+          </Reveal>
         </div>
 
         {/* Desktop: GSAP-driven horizontal track. Mobile: vertical stack. */}
         <div className="mt-12 hidden md:block">
           <div ref={trackRef} className="flex gap-6 px-6 will-change-transform">
-            {ALGOS.map((a) => (
+            {CARDS.map((a) => (
               <AlgoCard key={a.name} algo={a} />
             ))}
           </div>
         </div>
 
         <div className="mt-10 grid grid-cols-1 gap-4 px-6 sm:grid-cols-2 md:hidden">
-          {ALGOS.map((a, i) => (
+          {CARDS.map((a, i) => (
             <Reveal key={a.name} delay={i * 60}>
               <AlgoCard algo={a} mobile />
             </Reveal>
@@ -95,15 +115,15 @@ export function SuiteSection() {
   )
 }
 
-function AlgoCard({ algo, mobile }: { algo: Algo; mobile?: boolean }) {
+function AlgoCard({ algo, mobile }: { algo: Card; mobile?: boolean }) {
   return (
     <article
       className={`flex flex-col justify-between border border-white/10 bg-white/[0.02] p-8 ${
-        mobile ? "h-48 w-full" : "h-72 w-80 shrink-0"
-      } ${algo.roadmap ? "border-dashed" : ""}`}
+        mobile ? "min-h-48 w-full" : "h-72 w-80 shrink-0"
+      } ${algo.tag === "ROADMAP" ? "border-dashed" : ""}`}
     >
-      <div className="flex items-center justify-between">
-        <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-zinc-500">Algorithm</span>
+      <div className="flex items-center justify-between gap-3">
+        <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-zinc-500">{algo.market}</span>
         <span
           className={`text-[10px] font-medium uppercase tracking-[0.2em] ${
             algo.tag === "LIVE" ? "text-white" : "text-zinc-500"
@@ -114,7 +134,7 @@ function AlgoCard({ algo, mobile }: { algo: Algo; mobile?: boolean }) {
         </span>
       </div>
       <div>
-        <h3 className="text-2xl font-semibold tracking-tight text-white text-pretty">{algo.name}</h3>
+        <h3 className="text-xl font-semibold tracking-tight text-white text-pretty sm:text-2xl">{algo.name}</h3>
         <p className="mt-3 text-sm leading-relaxed text-zinc-400">{algo.fn}</p>
       </div>
     </article>

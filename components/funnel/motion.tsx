@@ -79,14 +79,17 @@ export function Reveal({
         },
         (ctx) => {
           if (ctx.conditions?.reduce) {
-            gsap.set(el, { autoAlpha: 1, y: 0 })
+            gsap.set(el, { opacity: 1, y: 0 })
             return
           }
+          // opacity (not autoAlpha): visibility:hidden would drop un-revealed
+          // content from the accessibility tree, making it unreachable for
+          // screen readers and role-based queries.
           gsap.fromTo(
             el,
-            { autoAlpha: 0, y },
+            { opacity: 0, y },
             {
-              autoAlpha: 1,
+              opacity: 1,
               y: 0,
               duration: 0.9,
               ease: "power3.out",
@@ -100,8 +103,10 @@ export function Reveal({
     { scope: ref },
   )
 
+  // No inline opacity: the hidden state is applied by GSAP pre-paint, so the
+  // content stays visible when JavaScript is disabled.
   return (
-    <Tag ref={ref as never} className={className} style={{ opacity: 0 }}>
+    <Tag ref={ref as never} className={className}>
       {children}
     </Tag>
   )
@@ -188,14 +193,15 @@ export function SlideIn({
         },
         (ctx) => {
           if (ctx.conditions?.reduce) {
-            gsap.set(el, { autoAlpha: 1, x: 0 })
+            gsap.set(el, { opacity: 1, x: 0 })
             return
           }
+          // opacity (not autoAlpha) — keeps content in the accessibility tree
           gsap.fromTo(
             el,
-            { autoAlpha: 0, x: from === "left" ? -amount : amount },
+            { opacity: 0, x: from === "left" ? -amount : amount },
             {
-              autoAlpha: 1,
+              opacity: 1,
               x: 0,
               ease: "none",
               scrollTrigger: {
@@ -213,8 +219,9 @@ export function SlideIn({
     { scope: ref },
   )
 
+  // No inline opacity — see Reveal: keeps content visible without JavaScript.
   return (
-    <Tag ref={ref as never} className={className} style={{ opacity: 0 }}>
+    <Tag ref={ref as never} className={className}>
       {children}
     </Tag>
   )

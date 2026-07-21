@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { X, Check } from "lucide-react"
+import { trackEvent } from "@/lib/analytics"
 import { useFunnel } from "./funnel-context"
 
 const FUNDED_OPTIONS = [
@@ -27,6 +28,23 @@ export function ApplicationForm() {
     const t = setTimeout(() => firstFieldRef.current?.focus(), 50)
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") closeApply()
+      // focus trap: keep Tab cycling inside the dialog
+      if (e.key === "Tab" && dialogRef.current) {
+        const focusables = dialogRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        )
+        if (focusables.length === 0) return
+        const first = focusables[0]
+        const last = focusables[focusables.length - 1]
+        const active = document.activeElement
+        if (e.shiftKey && (active === first || !dialogRef.current.contains(active))) {
+          e.preventDefault()
+          last.focus()
+        } else if (!e.shiftKey && active === last) {
+          e.preventDefault()
+          first.focus()
+        }
+      }
     }
     document.addEventListener("keydown", onKey)
     return () => {
@@ -73,8 +91,10 @@ export function ApplicationForm() {
       })
       if (!res.ok) throw new Error("failed")
       setStatus("success")
+      trackEvent("form_submit", { form: "founder_application" })
     } catch {
       setStatus("error")
+      trackEvent("form_error", { form: "founder_application" })
     }
   }
 
@@ -212,7 +232,9 @@ export function ApplicationForm() {
               </div>
 
               {status === "error" && (
-                <p className="text-sm text-zinc-300">Something went wrong. Please try again.</p>
+                <p role="alert" className="text-sm text-zinc-200">
+                  Something went wrong sending your application. Please try again.
+                </p>
               )}
 
               <button

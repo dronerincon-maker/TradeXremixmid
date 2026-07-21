@@ -7,21 +7,30 @@ import { revalidatePath } from "next/cache"
 
 const DEFAULT_CAP = 25
 
+/**
+ * Fail-safe: a database hiccup must never 500 the marketing pages.
+ * On any error we fall back to the default cap with zero confirmed seats.
+ */
 export async function getFoundingSeats(): Promise<{ seatCap: number; seatsRemaining: number }> {
-  const [capRow] = await db
-    .select({ valueInt: foundingConfig.valueInt })
-    .from(foundingConfig)
-    .where(eq(foundingConfig.key, "founding_seat_cap"))
+  try {
+    const [capRow] = await db
+      .select({ valueInt: foundingConfig.valueInt })
+      .from(foundingConfig)
+      .where(eq(foundingConfig.key, "founding_seat_cap"))
 
-  const seatCap = capRow?.valueInt ?? DEFAULT_CAP
+    const seatCap = capRow?.valueInt ?? DEFAULT_CAP
 
-  const [confirmed] = await db
-    .select({ value: count() })
-    .from(foundingMembers)
-    .where(eq(foundingMembers.status, "confirmed"))
+    const [confirmed] = await db
+      .select({ value: count() })
+      .from(foundingMembers)
+      .where(eq(foundingMembers.status, "confirmed"))
 
-  const seatsRemaining = Math.max(0, seatCap - (confirmed?.value ?? 0))
-  return { seatCap, seatsRemaining }
+    const seatsRemaining = Math.max(0, seatCap - (confirmed?.value ?? 0))
+    return { seatCap, seatsRemaining }
+  } catch (err) {
+    console.error("[founding] seat query failed, using defaults:", err)
+    return { seatCap: DEFAULT_CAP, seatsRemaining: DEFAULT_CAP }
+  }
 }
 
 export type FoundingApplicationState = {
@@ -58,16 +67,31 @@ export async function submitFoundingApplication(
   const { seatsRemaining } = await getFoundingSeats()
   const waitlisted = seatsRemaining <= 0
 
-  await db.insert(foundingMembers).values({
-    fullName,
-    email,
-    phone: phone || null,
-    propFirms: propFirms.slice(0, 500),
-    fundedAccounts: fundedAccounts.slice(0, 100),
-    capitalType: capitalType.slice(0, 50),
-    whyNow: whyNow.slice(0, 2000),
-    status: waitlisted ? "waitlisted" : "applied",
-  })
+  try {
+    await db.insert(foundingMembers).values({
+      fullName,
+      email,
+      phone: phone || null,
+      propFirms: propFirms.slice(0, 500),
+      fundedAccounts: fundedAccounts.slice(0, 100),
+      capitalType: capitalType.slice(0, 50),
+      whyNow: whyNow.slice(0, 2000),
+      status: waitlisted ? "waitlisted" : "applied",
+    })
+  } catch (err) {
+    // Last resort: never lose a lead silently — log the full payload for manual recovery.
+    console.error("[founding] insert failed, application payload:", {
+      fullName,
+      email,
+      phone,
+      propFirms,
+      fundedAccounts,
+      capitalType,
+      whyNow,
+      err,
+    })
+    return { ok: false, message: "Something went wrong on our side. Please try again in a minute." }
+  }
 
   revalidatePath("/institutional")
 

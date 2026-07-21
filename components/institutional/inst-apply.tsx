@@ -1,6 +1,7 @@
 "use client"
 
-import { useActionState } from "react"
+import { useActionState, useEffect } from "react"
+import { trackEvent } from "@/lib/analytics"
 import { Reveal } from "@/components/funnel/motion"
 import { GlitterWarp } from "@/components/funnel/glitter-warp"
 import { submitFoundingApplication, type FoundingApplicationState } from "@/app/actions/founding"
@@ -20,6 +21,12 @@ export function InstApply({ seatsRemaining }: { seatsRemaining: number }) {
   )
   const pricing = PRICING[TIER]
   const soldOut = seatsRemaining <= 0
+
+  useEffect(() => {
+    if (!state) return
+    if (state.ok) trackEvent("form_submit", { form: "founding_application", waitlisted: !!state.waitlisted })
+    else trackEvent("form_error", { form: "founding_application" })
+  }, [state])
 
   return (
     <section id="apply" className="relative w-full scroll-mt-8 overflow-hidden bg-black py-28 md:py-40">

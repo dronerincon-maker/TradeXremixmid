@@ -1,50 +1,17 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { DecodeText, Reveal, SlideIn, useInView, usePrefersReducedMotion } from "./motion"
+/**
+ * InfrastructureSection: the server environment, presented as a spec panel
+ * driven by lib/institutional-config (single source of truth for what ships
+ * day one vs what's on the roadmap). Replaces the previous decorative
+ * typing-terminal animation with real deliverables.
+ */
 
-const LINES = [
-  "> provisioning dedicated server ............ ok",
-  "> loading algorithm suite (5 live) ......... ok",
-  "> handing control to operator .............. ok",
-]
+import { DecodeText, Reveal, SlideIn } from "./motion"
+import { INFRASTRUCTURE } from "@/lib/institutional-config"
+import { STATUS_LABEL } from "@/lib/institutional-config"
 
 export function InfrastructureSection() {
-  const reduce = usePrefersReducedMotion()
-  const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.4 })
-  const [typed, setTyped] = useState<string[]>(reduce ? LINES : [])
-
-  useEffect(() => {
-    if (reduce || !inView) return
-    let cancelled = false
-    const out: string[] = []
-    let line = 0
-
-    const typeLine = () => {
-      if (cancelled || line >= LINES.length) return
-      const full = LINES[line]
-      let ch = 0
-      out[line] = ""
-      const step = () => {
-        if (cancelled) return
-        ch++
-        out[line] = full.slice(0, ch)
-        setTyped([...out])
-        if (ch < full.length) {
-          setTimeout(step, 18)
-        } else {
-          line++
-          setTimeout(typeLine, 260)
-        }
-      }
-      step()
-    }
-    typeLine()
-    return () => {
-      cancelled = true
-    }
-  }, [inView, reduce])
-
   return (
     <section className="relative w-full py-28">
       <div className="mx-auto w-full max-w-5xl px-6">
@@ -55,25 +22,39 @@ export function InfrastructureSection() {
           className="mt-6 block max-w-3xl text-balance text-4xl font-semibold tracking-[-0.03em] text-white sm:text-5xl"
           duration={700}
         />
+        <Reveal delay={100} as="p" className="mt-6 max-w-2xl text-lg text-zinc-400">
+          No local installs, no code, no configuration maze. Your server arrives with NinjaTrader installed, your
+          algorithm licenses loaded, and the data feed connected.
+        </Reveal>
 
         <SlideIn from="right" className="mt-12">
-          <div ref={ref} className="border border-white/10 bg-black/50 backdrop-blur-sm">
+          <div className="border border-white/10 bg-black/50 backdrop-blur-sm">
             <div className="flex items-center gap-2 border-b border-white/10 px-4 py-3">
               <span className="size-2.5 rounded-full bg-white/20" />
               <span className="size-2.5 rounded-full bg-white/20" />
               <span className="size-2.5 rounded-full bg-white/20" />
-              <span className="ml-3 font-mono text-xs text-zinc-500">tradexlabs: deploy</span>
+              <span className="ml-3 font-mono text-xs text-zinc-500">tradexlabs: server environment</span>
             </div>
-            <div className="p-6 font-mono text-sm leading-loose text-zinc-300 sm:text-base">
-              {LINES.map((full, i) => (
-                <div key={full} className="whitespace-pre-wrap">
-                  <span>{typed[i] ?? ""}</span>
-                  {typed[i] !== undefined && typed[i].length < full.length && (
-                    <span className="ml-0.5 inline-block h-4 w-2 translate-y-0.5 animate-pulse bg-white" />
-                  )}
-                </div>
+            <ul className="divide-y divide-white/10">
+              {INFRASTRUCTURE.map((item) => (
+                <li key={item.name} className="flex flex-col gap-2 p-5 sm:flex-row sm:items-center sm:justify-between sm:gap-8 sm:px-6">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-sm font-medium text-white">{item.name}</span>
+                    <span className="text-xs leading-relaxed text-zinc-500">{item.detail}</span>
+                  </div>
+                  <span
+                    className={`shrink-0 font-mono text-[10px] uppercase tracking-[0.2em] ${
+                      item.status === "live" ? "text-white" : "text-zinc-600"
+                    }`}
+                  >
+                    {item.status === "live" && (
+                      <span className="mr-1.5 inline-block size-1.5 rounded-full bg-white align-middle" />
+                    )}
+                    {STATUS_LABEL[item.status]}
+                  </span>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </SlideIn>
 

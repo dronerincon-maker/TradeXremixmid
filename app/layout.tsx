@@ -7,9 +7,23 @@ const geistSans = Geist({ subsets: ['latin'], variable: '--font-geist-sans' })
 const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' })
 
 export const metadata: Metadata = {
-  title: 'TradeXLabs | Founder Pro',
+  metadataBase: new URL('https://tradexlabs-remix.vercel.app'),
+  title: 'TradeXLabs — Automated Algorithmic Execution for Funded Traders',
   description:
-    'A charter-tier automated execution algo suite for funded prop traders. 50 founding seats. Application required.',
+    'TAAS: an automated algorithmic suite for funded futures traders. Rules-based execution from a dedicated server, with NinjaTrader backtests published gross and net. Founding cohort — application required.',
+  openGraph: {
+    title: 'TradeXLabs — Automated Algorithmic Execution for Funded Traders',
+    description:
+      'Rules-based execution for prop-firm accounts. Verified backtest data, dedicated server infrastructure, operator control. Founding cohort — application required.',
+    type: 'website',
+    siteName: 'TradeXLabs',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'TradeXLabs — Automated Algorithmic Execution for Funded Traders',
+    description:
+      'Rules-based execution for prop-firm accounts. Verified backtest data, dedicated server infrastructure, operator control.',
+  },
   generator: 'v0.app',
 }
 
