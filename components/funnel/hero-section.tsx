@@ -113,7 +113,7 @@ export function HeroSection() {
       <div className="relative h-[100svh] w-full">
         {/* plane 0 — tunnel */}
         <div className="hero-tunnel absolute inset-0 will-change-transform">
-          {!reduce && <WebGLTunnel speed={0.4} density={9} intensity={1} />}
+          {!reduce && <WebGLTunnel speed={0.4} density={9} intensity={1} accent={[0.34, 0.42, 0.82]} />}
           {reduce && (
             <div
               className="absolute inset-0"
@@ -129,13 +129,13 @@ export function HeroSection() {
 
         {/* plane 1 — giant brand X seated on a soft dark well */}
         <div className="hero-x pointer-events-none absolute inset-0 z-[1] grid place-items-center">
-          <div className="relative grid h-[82vmin] w-[82vmin] place-items-center md:h-[66vmin] md:w-[66vmin]">
+          <div className="relative grid h-[80vmin] w-[80vmin] place-items-center md:h-[62vmin] md:w-[62vmin]">
             <div
               aria-hidden
               className="absolute inset-0 rounded-full"
-              style={{ background: "radial-gradient(circle at 50% 50%, rgba(0,0,0,0.82) 30%, rgba(0,0,0,0.35) 55%, transparent 72%)" }}
+              style={{ background: "radial-gradient(circle at 50% 50%, rgba(0,0,0,0.7) 26%, rgba(0,0,0,0.25) 52%, transparent 70%)" }}
             />
-            <BrandX className="h-full w-full opacity-40 sm:opacity-[0.45]" />
+            <BrandX className="h-full w-full opacity-[0.55] sm:opacity-[0.6]" />
           </div>
         </div>
 
