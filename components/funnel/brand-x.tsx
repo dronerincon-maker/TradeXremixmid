@@ -42,31 +42,37 @@ export function BrandX({ className = "" }: { className?: string }) {
 
   return (
     <div ref={wrapRef} className={`will-change-transform ${className}`} style={{ transformStyle: "preserve-3d" }}>
-      <svg viewBox="0 0 180 180" className="h-full w-full" role="img" aria-label="TradeXLabs">
+      <svg viewBox="0 0 120 120" className="h-full w-full" role="img" aria-label="TradeXLabs">
         <defs>
-          <linearGradient id="brandx-grad" x1="0" y1="0" x2="1" y2="1">
+          {/* cool → warm along each blade: left ends cyan, right ends magenta */}
+          <linearGradient id="brandx-grad" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0%" stopColor="#2fc6f6" />
-            <stop offset="52%" stopColor="#5b6ef0" />
+            <stop offset="50%" stopColor="#5b6ef0" />
             <stop offset="100%" stopColor="#c33be1" />
           </linearGradient>
           <filter id="brandx-glow" x="-40%" y="-40%" width="180%" height="180%">
-            <feGaussianBlur stdDeviation="2.8" result="b" />
+            <feGaussianBlur stdDeviation="2.4" result="b" />
             <feMerge>
               <feMergeNode in="b" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
         </defs>
-        {/* original icon.svg monogram geometry, brand-gradient filled */}
-        <g style={{ transform: "scale(0.95)", transformOrigin: "center" }} filter="url(#brandx-glow)">
-          <path
+        {/* Two crossing blades with chevron-pointed ends — the TradeXLabs X.
+            Hexagon bar (pointed left/right tips) rotated ±45° about the centre. */}
+        <g filter="url(#brandx-glow)">
+          <polygon
             fill="url(#brandx-grad)"
-            d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"
+            points="2,60 18,47 102,47 118,60 102,73 18,73"
+            transform="rotate(45 60 60)"
           />
-          <path
+          <polygon
             fill="url(#brandx-grad)"
-            d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"
+            points="2,60 18,47 102,47 118,60 102,73 18,73"
+            transform="rotate(-45 60 60)"
           />
+          {/* brighter crossing core */}
+          <rect x="49" y="49" width="22" height="22" rx="3" fill="#ffffff" opacity="0.5" transform="rotate(45 60 60)" />
         </g>
       </svg>
     </div>
