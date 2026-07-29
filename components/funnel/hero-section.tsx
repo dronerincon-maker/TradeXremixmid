@@ -1,26 +1,34 @@
 "use client"
 
 /**
- * HeroSection: scroll-into-evidence scene on GSAP ScrollTrigger.
+ * HeroSection: a layered fly-through on GSAP ScrollTrigger.
  *
- * A shimmering dot field (PixelCard engine) sits behind the value
- * proposition. Scrolling pins the stage and scrubs a timeline: the dots
- * zoom toward the viewer and dissolve, the copy lifts away, and a
- * verified-performance panel (real NinjaTrader backtest equity curve)
- * clip-path-reveals into place. The cue scrolls you through it.
+ * Three depth planes:
+ *   0  WebGLTunnel      — procedural wormhole corridor (lazy, client-only)
+ *   1  BrandX           — the giant TradeX mark floating in the throat
+ *   2  copy + CTAs      — the value proposition (SSR'd; this is the LCP)
  *
- * Reduced motion → no pin: static copy hero with the panel stacked below.
+ * Scrolling pins the stage and scrubs a timeline that accelerates the tunnel,
+ * flies the viewer through the X, lifts the copy, and clip-path-reveals a
+ * verified-performance panel (real QuantORB net equity curve).
+ *
+ * Reduced motion / no JS: static value-prop hero, static X, evidence panel
+ * stacked below. The tunnel degrades to a CSS gradient when WebGL is absent.
  */
 
 import { useRef } from "react"
+import dynamic from "next/dynamic"
 import { ChevronDown } from "lucide-react"
 import { gsap, useGSAP, SplitText, ScrollTrigger } from "@/lib/gsap"
 import { BACKTESTS } from "@/lib/backtest-data"
 import { trackEvent } from "@/lib/analytics"
-import { PixelCard } from "./pixel-card"
 import { ApplyButton } from "./apply-button"
 import { EquityChart } from "./equity-chart"
+import { BrandX } from "./brand-x"
 import { usePrefersReducedMotion } from "./motion"
+
+// Client-only: keeps the shader out of the server bundle and off the LCP path.
+const WebGLTunnel = dynamic(() => import("./webgl-tunnel").then((m) => m.WebGLTunnel), { ssr: false })
 
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -35,7 +43,6 @@ export function HeroSection() {
         const section = sectionRef.current
         if (!section || !headlineRef.current) return
 
-        // Intro: masked per-word reveal + staggered support copy/CTAs/cue.
         SplitText.create(headlineRef.current, {
           type: "words",
           mask: "words",
@@ -53,24 +60,26 @@ export function HeroSection() {
         gsap
           .timeline({ delay: 0.4, defaults: { ease: "power3.out" } })
           .from(".hero-eyebrow", { autoAlpha: 0, y: -10, duration: 0.6 }, 0)
+          .from(".hero-x", { autoAlpha: 0, scale: 0.6, duration: 1.1, ease: "power2.out" }, 0)
           .from(".hero-sub", { autoAlpha: 0, y: 14, duration: 0.7 }, 0.25)
           .from(".hero-ctas", { autoAlpha: 0, y: 14, duration: 0.7 }, 0.4)
           .from(".hero-trust", { autoAlpha: 0, duration: 0.7 }, 0.55)
           .from(".hero-cue", { autoAlpha: 0, duration: 0.8 }, "+=0.4")
 
-        // Scrubbed scene: dots zoom through, copy lifts, evidence panel reveals.
+        // Scrubbed fly-through: accelerate through the X, lift copy, reveal panel.
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: section,
             pin: true,
             scrub: 1,
             start: "top top",
-            end: "+=160%",
+            end: "+=170%",
             invalidateOnRefresh: true,
           },
         })
-        tl.to(".hero-dots", { scale: 2.6, autoAlpha: 0, ease: "power2.in", duration: 1 }, 0)
-          .to(".hero-copy", { y: -140, autoAlpha: 0, ease: "none", duration: 0.65 }, 0)
+        tl.to(".hero-x", { scale: 3.4, autoAlpha: 0, ease: "power2.in", duration: 1 }, 0)
+          .to(".hero-tunnel", { scale: 1.35, autoAlpha: 0.15, ease: "power1.in", duration: 1 }, 0)
+          .to(".hero-copy", { y: -140, autoAlpha: 0, ease: "none", duration: 0.6 }, 0)
           .to(".hero-cue", { autoAlpha: 0, ease: "none", duration: 0.3 }, 0)
           .fromTo(
             ".hero-panel",
@@ -82,7 +91,7 @@ export function HeroSection() {
               ease: "power2.out",
               duration: 0.65,
             },
-            0.35,
+            0.4,
           )
         stRef.current = tl.scrollTrigger ?? null
       })
@@ -92,11 +101,8 @@ export function HeroSection() {
 
   const scrollToEvidence = () => {
     const st = stRef.current
-    if (st) {
-      window.scrollTo({ top: st.end, behavior: "smooth" })
-    } else {
-      document.getElementById("proof")?.scrollIntoView({ behavior: "smooth" })
-    }
+    if (st) window.scrollTo({ top: st.end, behavior: "smooth" })
+    else document.getElementById("proof")?.scrollIntoView({ behavior: "smooth" })
   }
 
   const strategy = BACKTESTS[0]
@@ -105,30 +111,53 @@ export function HeroSection() {
   return (
     <section ref={sectionRef} className="relative w-full overflow-hidden">
       <div className="relative h-[100svh] w-full">
-        {/* dot field */}
-        <div className="hero-dots absolute inset-0 will-change-transform">
-          <PixelCard gap={6} speed={30} pixelSize={2} className="h-full w-full" />
+        {/* plane 0 — tunnel */}
+        <div className="hero-tunnel absolute inset-0 will-change-transform">
+          {!reduce && <WebGLTunnel speed={0.4} density={9} intensity={1} />}
+          {reduce && (
+            <div
+              className="absolute inset-0"
+              style={{ background: "radial-gradient(120% 90% at 50% 45%, rgba(30,45,70,0.4), #000 60%)" }}
+            />
+          )}
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0"
-            style={{
-              background: "radial-gradient(60% 50% at 50% 50%, rgba(0,0,0,0.78), rgba(0,0,0,0.2) 70%, transparent)",
-            }}
+            style={{ background: "radial-gradient(60% 50% at 50% 50%, rgba(0,0,0,0.72), rgba(0,0,0,0.15) 70%, transparent)" }}
           />
         </div>
 
-        {/* evidence panel: revealed by the scrub */}
+        {/* plane 1 — giant brand X seated on a soft dark well */}
+        <div className="hero-x pointer-events-none absolute inset-0 z-[1] grid place-items-center">
+          <div className="relative grid h-[82vmin] w-[82vmin] place-items-center md:h-[66vmin] md:w-[66vmin]">
+            <div
+              aria-hidden
+              className="absolute inset-0 rounded-full"
+              style={{ background: "radial-gradient(circle at 50% 50%, rgba(0,0,0,0.82) 30%, rgba(0,0,0,0.35) 55%, transparent 72%)" }}
+            />
+            <BrandX className="h-full w-full opacity-40 sm:opacity-[0.45]" />
+          </div>
+        </div>
+
+        {/* legibility scrim: a soft dark oval behind the copy column */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-[2]"
+          style={{ background: "radial-gradient(46% 34% at 50% 46%, rgba(0,0,0,0.72), rgba(0,0,0,0.35) 60%, transparent 80%)" }}
+        />
+
+        {/* plane 2 — evidence panel (revealed by the scrub) */}
         {!reduce && (
-          <div className="pointer-events-none absolute inset-0 z-[1] grid place-items-center p-4 sm:p-6">
-            <div className="hero-panel pointer-events-auto w-[min(860px,94%)] rounded-3xl border border-white/10 bg-[#050505] opacity-0 will-change-transform">
+          <div className="pointer-events-none absolute inset-0 z-[2] grid place-items-center p-4 sm:p-6">
+            <div className="hero-panel pointer-events-auto w-[min(860px,94%)] rounded-3xl border border-white/10 bg-[#050505]/90 opacity-0 backdrop-blur-sm will-change-transform">
               <HeroEvidencePanel onSeeMethodology={scrollToEvidence} strategyName={strategy.name} view={view} instrument={strategy.instrument} period={strategy.period} trades={strategy.trades} />
             </div>
           </div>
         )}
 
-        {/* copy */}
-        <div className="hero-copy pointer-events-none absolute inset-0 z-[2] flex flex-col items-center justify-center gap-5 px-6 text-center will-change-transform">
-          <p className="hero-eyebrow font-mono text-[10px] uppercase tracking-[0.3em] text-zinc-500 sm:text-[11px]">
+        {/* plane 2 — copy */}
+        <div className="hero-copy pointer-events-none absolute inset-0 z-[3] flex flex-col items-center justify-center gap-5 px-6 text-center will-change-transform">
+          <p className="hero-eyebrow font-mono text-[10px] uppercase tracking-[0.3em] text-zinc-400 sm:text-[11px]">
             TradeXLabs · Automated execution for funded traders
           </p>
           <h1
@@ -138,7 +167,7 @@ export function HeroSection() {
           >
             Your prop accounts, run like a trading desk.
           </h1>
-          <p className="hero-sub max-w-xl text-balance text-sm leading-relaxed text-zinc-400 sm:text-base">
+          <p className="hero-sub max-w-xl text-balance text-sm leading-relaxed text-zinc-300 sm:text-base">
             An automated algorithmic suite for funded futures traders. Rules-based strategy logic, executed from a
             dedicated server — no hesitation, no revenge trades, no rule drift.
           </p>
@@ -152,28 +181,27 @@ export function HeroSection() {
                 trackEvent("hero_secondary_cta_click", { section: "hero", label: "See the verified data" })
                 scrollToEvidence()
               }}
-              className="inline-flex items-center justify-center rounded-full border border-white/15 bg-transparent px-8 py-3 text-sm font-semibold tracking-tight text-white transition-colors duration-200 hover:border-white/40 hover:bg-white/5"
+              className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/5 px-8 py-3 text-sm font-semibold tracking-tight text-white backdrop-blur-sm transition-colors duration-200 hover:border-white/40 hover:bg-white/10"
             >
               See the verified data
             </button>
           </div>
-          <p className="hero-trust mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-600">
+          <p className="hero-trust mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500">
             NinjaTrader backtest data · Published gross &amp; net of commissions · No martingale, no grid
           </p>
         </div>
 
-        {/* scroll cue */}
         <button
           type="button"
           onClick={scrollToEvidence}
-          className="hero-cue absolute bottom-6 left-1/2 z-[2] flex -translate-x-1/2 flex-col items-center gap-2 text-white/55 transition-colors hover:text-white"
+          className="hero-cue absolute bottom-6 left-1/2 z-[3] flex -translate-x-1/2 flex-col items-center gap-2 text-white/55 transition-colors hover:text-white"
         >
           <span className="text-[11px] uppercase tracking-[0.3em]">See the data behind the algos</span>
           <ChevronDown className="size-4 animate-bounce" />
         </button>
       </div>
 
-      {/* reduced motion: evidence panel stacks below instead of scrub-revealing */}
+      {/* reduced motion: evidence panel stacks below */}
       {reduce && (
         <div className="grid place-items-center px-6 pb-24">
           <div className="w-[min(860px,94%)] rounded-3xl border border-white/10 bg-[#050505]">

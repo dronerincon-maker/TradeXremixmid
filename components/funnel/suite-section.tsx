@@ -58,6 +58,25 @@ export function SuiteSection() {
 
           // ScrollTrigger pin + scrub: vertical scroll drives the track horizontally.
           const distance = () => Math.max(0, track.scrollWidth - window.innerWidth + 48)
+          const cards = Array.from(track.querySelectorAll<HTMLElement>("[data-algo-card]"))
+
+          // Depth pass: cards nearest the viewport centre sit forward (scale 1,
+          // full opacity); those toward the edges recede — so moving sideways
+          // reads as moving *through* a layered corridor rather than a flat belt.
+          const applyDepth = () => {
+            const mid = window.innerWidth / 2
+            for (const c of cards) {
+              const r = c.getBoundingClientRect()
+              const d = Math.abs(r.left + r.width / 2 - mid) / mid // 0 centre → ~1 edge
+              const k = Math.min(1, d)
+              gsap.set(c, {
+                scale: 1 - k * 0.14,
+                y: k * 26,
+                opacity: 1 - k * 0.45,
+                filter: `blur(${(k * 1.4).toFixed(2)}px)`,
+              })
+            }
+          }
 
           gsap.to(track, {
             x: () => -distance(),
@@ -69,6 +88,8 @@ export function SuiteSection() {
               start: "top top",
               end: () => `+=${distance()}`,
               invalidateOnRefresh: true,
+              onRefresh: applyDepth,
+              onUpdate: applyDepth,
             },
           })
         },
@@ -118,8 +139,9 @@ export function SuiteSection() {
 function AlgoCard({ algo, mobile }: { algo: Card; mobile?: boolean }) {
   return (
     <article
-      className={`flex flex-col justify-between border border-white/10 bg-white/[0.02] p-8 ${
-        mobile ? "min-h-48 w-full" : "h-72 w-80 shrink-0"
+      data-algo-card={mobile ? undefined : ""}
+      className={`flex flex-col justify-between border border-white/10 bg-white/[0.02] p-8 backdrop-blur-sm ${
+        mobile ? "min-h-48 w-full" : "h-72 w-80 shrink-0 will-change-transform"
       } ${algo.tag === "ROADMAP" ? "border-dashed" : ""}`}
     >
       <div className="flex items-center justify-between gap-3">

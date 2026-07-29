@@ -159,8 +159,14 @@
   * {
     @apply border-border outline-ring/50;
   }
+  /* Contain horizontal reveal transforms (SlideIn/Parallax) without creating a
+     scroll container — overflow-x:clip leaves GSAP pinning and sticky intact. */
+  html {
+    overflow-x: clip;
+  }
   body {
     @apply bg-background text-foreground;
+    overflow-x: clip;
   }
   /* keyboard navigation: a visible, consistent focus ring on dark ground */
   :focus-visible {
