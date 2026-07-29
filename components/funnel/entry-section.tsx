@@ -34,7 +34,7 @@ export function EntrySection() {
         }}
       />
       <div className="relative z-10 mx-auto w-full max-w-4xl px-6">
-        <DecodeText text="FOUNDING CHARTER" className="block text-xs font-medium uppercase text-zinc-500" duration={500} />
+        <DecodeText text="FOUNDING CHARTER" className="sig-eyebrow block text-xs font-medium uppercase" duration={500} />
         <DecodeText
           as="h2"
           text={`${seatCap} seats. Ever.`}
@@ -66,7 +66,7 @@ export function EntrySection() {
             </div>
             <div className="mt-3 h-px w-full bg-white/10">
               <div
-                className="h-px bg-white"
+                className="sig-gradient-bar h-px"
                 style={{ width: `${fill}%`, transition: reduce ? "none" : "width 1200ms cubic-bezier(0.16,1,0.3,1)" }}
               />
             </div>

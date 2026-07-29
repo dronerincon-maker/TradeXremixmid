@@ -151,7 +151,7 @@ function AlgoCard({ algo, mobile }: { algo: Card; mobile?: boolean }) {
             algo.tag === "LIVE" ? "text-white" : "text-zinc-500"
           }`}
         >
-          {algo.tag === "LIVE" && <span className="mr-1.5 inline-block size-1.5 rounded-full bg-white align-middle" />}
+          {algo.tag === "LIVE" && <span className="mr-1.5 inline-block size-1.5 rounded-full bg-[#2fc6f6] align-middle shadow-[0_0_6px_#2fc6f6]" />}
           {algo.tag}
         </span>
       </div>

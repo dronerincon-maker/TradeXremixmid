@@ -10,10 +10,10 @@ export function FooterSection() {
           <p className="mt-2 text-xs uppercase tracking-[0.28em] text-zinc-600">Signal through the noise</p>
         </div>
         <nav className="flex gap-8 text-sm text-zinc-500">
-          <a href="/institutional" className="transition-colors hover:text-white">
+          <a href="/institutional" className="transition-colors hover:text-[#2fc6f6]">
             Institutional
           </a>
-          <a href="/#proof" className="transition-colors hover:text-white">
+          <a href="/#proof" className="transition-colors hover:text-[#2fc6f6]">
             Verified data
           </a>
         </nav>

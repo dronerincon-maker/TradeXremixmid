@@ -48,7 +48,7 @@ export function InfrastructureSection() {
                     }`}
                   >
                     {item.status === "live" && (
-                      <span className="mr-1.5 inline-block size-1.5 rounded-full bg-white align-middle" />
+                      <span className="mr-1.5 inline-block size-1.5 rounded-full bg-[#2fc6f6] align-middle shadow-[0_0_6px_#2fc6f6]" />
                     )}
                     {STATUS_LABEL[item.status]}
                   </span>

@@ -85,8 +85,8 @@ export function FaqSection() {
                       {faq.q}
                       <Plus
                         aria-hidden
-                        className="size-4 shrink-0 text-zinc-500 transition-transform duration-300"
-                        style={{ transform: expanded ? "rotate(45deg)" : "none" }}
+                        className="size-4 shrink-0 transition-transform duration-300"
+                        style={{ transform: expanded ? "rotate(45deg)" : "none", color: expanded ? "var(--sig-cyan)" : "#71717a" }}
                       />
                     </button>
                   </h3>
