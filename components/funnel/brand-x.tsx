@@ -1,14 +1,11 @@
 "use client"
 
 /**
- * BrandX: the TradeXLabs mark — two crossing blades with the brand
- * cyan → blue → magenta gradient (left cool, right warm), matching the
- * supplied logo. The gradient lives ONLY on the mark; the rest of the UI
- * stays monochrome, so the accent reads as brand identity rather than a
- * generic gradient wash.
+ * BrandX: the TradeXLabs mark — the original icon.svg monogram geometry,
+ * filled with the brand cyan → indigo → magenta gradient so it reads as the
+ * supplied logo (cool upper-left → warm lower-right) rather than a generic
+ * white glyph. Soft outer glow + subtle pointer-parallax tilt give it depth.
  *
- * A soft outer glow + a bright crossing-point core give it depth; a subtle
- * pointer-parallax tilt makes it feel like a solid object in the tunnel.
  * Reduced motion / no JS → static and centered.
  */
 
@@ -45,30 +42,31 @@ export function BrandX({ className = "" }: { className?: string }) {
 
   return (
     <div ref={wrapRef} className={`will-change-transform ${className}`} style={{ transformStyle: "preserve-3d" }}>
-      <svg viewBox="0 0 120 120" className="h-full w-full" role="img" aria-label="TradeXLabs">
+      <svg viewBox="0 0 180 180" className="h-full w-full" role="img" aria-label="TradeXLabs">
         <defs>
-          {/* cool → warm along each blade: left ends cyan, right ends magenta */}
-          <linearGradient id="brandx-grad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#2FC6F6" />
-            <stop offset="48%" stopColor="#5B6EF0" />
-            <stop offset="100%" stopColor="#C33BE1" />
+          <linearGradient id="brandx-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#2fc6f6" />
+            <stop offset="52%" stopColor="#5b6ef0" />
+            <stop offset="100%" stopColor="#c33be1" />
           </linearGradient>
           <filter id="brandx-glow" x="-40%" y="-40%" width="180%" height="180%">
-            <feGaussianBlur stdDeviation="2.6" result="b" />
+            <feGaussianBlur stdDeviation="2.8" result="b" />
             <feMerge>
               <feMergeNode in="b" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
         </defs>
-
-        <g filter="url(#brandx-glow)">
-          {/* \ blade: top-left (cyan) → bottom-right (magenta) */}
-          <rect x="8" y="50" width="104" height="20" rx="5" fill="url(#brandx-grad)" transform="rotate(45 60 60)" />
-          {/* / blade: bottom-left (cyan) → top-right (magenta) */}
-          <rect x="8" y="50" width="104" height="20" rx="5" fill="url(#brandx-grad)" transform="rotate(-45 60 60)" />
-          {/* brighter crossing core */}
-          <rect x="49" y="49" width="22" height="22" rx="4" fill="#ffffff" opacity="0.55" transform="rotate(45 60 60)" />
+        {/* original icon.svg monogram geometry, brand-gradient filled */}
+        <g style={{ transform: "scale(0.95)", transformOrigin: "center" }} filter="url(#brandx-glow)">
+          <path
+            fill="url(#brandx-grad)"
+            d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z"
+          />
+          <path
+            fill="url(#brandx-grad)"
+            d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z"
+          />
         </g>
       </svg>
     </div>

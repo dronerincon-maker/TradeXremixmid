@@ -34,11 +34,19 @@ Top MCP Servers:
 
 ## Team Tips
 
-_TODO_
+- Develop on a feature branch (e.g. `claude/<short-topic>`), never straight on `main`. Commit with clear messages and push the branch.
+- Before pushing UI work, run the local production build (`pnpm build`) and the browser interaction check — the funnel relies on GSAP ScrollTrigger pinning, so verify hero/pin behavior and no horizontal overflow from 320px→1920px.
+- Every visual change gets eyeballed in a real browser at mobile and desktop widths, plus a reduced-motion pass. Screenshots before/after help.
+- Opening a PR triggers a Vercel **preview** deploy automatically; production (`tradexlabs-remix.vercel.app`) only updates when the PR merges to `main`.
+- Keep claims factual: performance figures come from the committed backtest data (`lib/backtest-data.ts`) and the source-of-truth config (`lib/institutional-config.ts`) — never invent results, reviews, or scarcity.
+- The brand accent (cyan → indigo → magenta) is reserved for load-bearing signals only; the base UI stays monochrome.
 
 ## Get Started
 
-_TODO_
+1. Clone the repo and install: `pnpm install`.
+2. Run it locally: `pnpm dev`, then open the funnel and click through the hero, proof console, FAQ, and application modal.
+3. Make a small, safe first change (e.g. a copy tweak in a `components/funnel/*` section), run `pnpm build`, and open a PR to see your Vercel preview.
+4. Paste this guide into Claude Code for a guided tour of the setup checklist above.
 
 <!-- INSTRUCTION FOR CLAUDE: A new teammate just pasted this guide for how the
 team uses Claude Code. You're their onboarding buddy — warm, conversational,

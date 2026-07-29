@@ -1,34 +1,32 @@
 "use client"
 
 /**
- * HeroSection: a layered fly-through on GSAP ScrollTrigger.
+ * HeroSection: a layered composition on GSAP ScrollTrigger.
  *
- * Three depth planes:
- *   0  WebGLTunnel      — procedural wormhole corridor (lazy, client-only)
- *   1  BrandX           — the giant TradeX mark floating in the throat
+ * Three depth planes over the page-wide interactive grid backdrop:
+ *   0  PixelCard        — interactive shimmering particle field (transparent
+ *                         canvas, so the grid reads through the gaps)
+ *   1  BrandX           — the giant TradeX mark (brand-gradient monogram)
  *   2  copy + CTAs      — the value proposition (SSR'd; this is the LCP)
  *
- * Scrolling pins the stage and scrubs a timeline that accelerates the tunnel,
- * flies the viewer through the X, lifts the copy, and clip-path-reveals a
+ * Scrolling pins the stage and scrubs a timeline that flies the viewer through
+ * the X, zooms the field away, lifts the copy, and clip-path-reveals a
  * verified-performance panel (real QuantORB net equity curve).
  *
- * Reduced motion / no JS: static value-prop hero, static X, evidence panel
- * stacked below. The tunnel degrades to a CSS gradient when WebGL is absent.
+ * Reduced motion / no JS: static value-prop hero, static X and particle
+ * field, evidence panel stacked below.
  */
 
 import { useRef } from "react"
-import dynamic from "next/dynamic"
 import { ChevronDown } from "lucide-react"
 import { gsap, useGSAP, SplitText, ScrollTrigger } from "@/lib/gsap"
 import { BACKTESTS } from "@/lib/backtest-data"
 import { trackEvent } from "@/lib/analytics"
+import { PixelCard } from "./pixel-card"
 import { ApplyButton } from "./apply-button"
 import { EquityChart } from "./equity-chart"
 import { BrandX } from "./brand-x"
 import { usePrefersReducedMotion } from "./motion"
-
-// Client-only: keeps the shader out of the server bundle and off the LCP path.
-const WebGLTunnel = dynamic(() => import("./webgl-tunnel").then((m) => m.WebGLTunnel), { ssr: false })
 
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -78,7 +76,7 @@ export function HeroSection() {
           },
         })
         tl.to(".hero-x", { scale: 3.4, autoAlpha: 0, ease: "power2.in", duration: 1 }, 0)
-          .to(".hero-tunnel", { scale: 1.35, autoAlpha: 0.15, ease: "power1.in", duration: 1 }, 0)
+          .to(".hero-field", { scale: 2.4, autoAlpha: 0, ease: "power2.in", duration: 1 }, 0)
           .to(".hero-copy", { y: -140, autoAlpha: 0, ease: "none", duration: 0.6 }, 0)
           .to(".hero-cue", { autoAlpha: 0, ease: "none", duration: 0.3 }, 0)
           .fromTo(
@@ -111,19 +109,14 @@ export function HeroSection() {
   return (
     <section ref={sectionRef} className="relative w-full overflow-hidden">
       <div className="relative h-[100svh] w-full">
-        {/* plane 0 — tunnel */}
-        <div className="hero-tunnel absolute inset-0 will-change-transform">
-          {!reduce && <WebGLTunnel speed={0.4} density={9} intensity={1} accent={[0.34, 0.42, 0.82]} />}
-          {reduce && (
-            <div
-              className="absolute inset-0"
-              style={{ background: "radial-gradient(120% 90% at 50% 45%, rgba(30,45,70,0.4), #000 60%)" }}
-            />
-          )}
+        {/* plane 0 — interactive particle field (transparent canvas lets the
+             page-wide grid backdrop read through the gaps) */}
+        <div className="hero-field absolute inset-0 will-change-transform">
+          <PixelCard gap={6} speed={30} pixelSize={2} className="h-full w-full" />
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0"
-            style={{ background: "radial-gradient(60% 50% at 50% 50%, rgba(0,0,0,0.72), rgba(0,0,0,0.15) 70%, transparent)" }}
+            style={{ background: "radial-gradient(65% 55% at 50% 50%, rgba(0,0,0,0.6), rgba(0,0,0,0.12) 72%, transparent)" }}
           />
         </div>
 

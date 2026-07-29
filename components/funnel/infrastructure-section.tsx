@@ -7,14 +7,33 @@
  * typing-terminal animation with real deliverables.
  */
 
+import dynamic from "next/dynamic"
 import { DecodeText, Reveal, SlideIn } from "./motion"
 import { INFRASTRUCTURE } from "@/lib/institutional-config"
 import { STATUS_LABEL } from "@/lib/institutional-config"
 
+// The wormhole reads here as the live market data feed streaming toward the
+// server — narrative, not decorative. Lazy + client-only; dimmed behind a
+// heavy scrim so the spec sheet stays legible. Degrades to a CSS gradient
+// without WebGL and to a static frame under reduced motion.
+const WebGLTunnel = dynamic(() => import("./webgl-tunnel").then((m) => m.WebGLTunnel), { ssr: false })
+
 export function InfrastructureSection() {
   return (
-    <section className="relative w-full py-28">
-      <div className="mx-auto w-full max-w-5xl px-6">
+    <section className="relative w-full overflow-hidden py-28">
+      {/* data-feed corridor */}
+      <div aria-hidden className="absolute inset-0">
+        <WebGLTunnel speed={0.22} density={7} intensity={0.6} accent={[0.34, 0.42, 0.82]} quality={0.85} />
+      </div>
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(90deg, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.82) 42%, rgba(0,0,0,0.55) 100%)",
+        }}
+      />
+      <div className="relative z-10 mx-auto w-full max-w-5xl px-6">
         <DecodeText text="THE INFRASTRUCTURE" className="block text-xs font-medium uppercase text-zinc-500" duration={500} />
         <DecodeText
           as="h2"
