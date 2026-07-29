@@ -63,6 +63,8 @@ export function SuiteSection() {
           // Depth pass: cards nearest the viewport centre sit forward (scale 1,
           // full opacity); those toward the edges recede — so moving sideways
           // reads as moving *through* a layered corridor rather than a flat belt.
+          // Transform + opacity only (compositor-friendly); no filter/blur,
+          // which would force repaints on every scrubbed frame.
           const applyDepth = () => {
             const mid = window.innerWidth / 2
             for (const c of cards) {
@@ -72,8 +74,7 @@ export function SuiteSection() {
               gsap.set(c, {
                 scale: 1 - k * 0.14,
                 y: k * 26,
-                opacity: 1 - k * 0.45,
-                filter: `blur(${(k * 1.4).toFixed(2)}px)`,
+                opacity: 1 - k * 0.5,
               })
             }
           }

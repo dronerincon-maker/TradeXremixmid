@@ -8,6 +8,10 @@ const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://tradexlabs-remix.vercel.app'),
+  icons: {
+    icon: [{ url: '/icon.svg', type: 'image/svg+xml' }],
+    apple: [{ url: '/apple-icon.png', sizes: '180x180' }],
+  },
   title: 'TradeXLabs — Automated Algorithmic Execution for Funded Traders',
   description:
     'TAAS: an automated algorithmic suite for funded futures traders. Rules-based execution from a dedicated server, with NinjaTrader backtests published gross and net. Founding cohort — application required.',
