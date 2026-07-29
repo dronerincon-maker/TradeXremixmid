@@ -156,16 +156,6 @@
 }
 
 @layer base {
-  /* ── Signal Terminal theme tokens ──────────────────────────────────────
-     Dark institutional base; the brand accent is used only on load-bearing
-     signals (meters, the equity curve, eyebrows, LIVE dots, links, focus). */
-  :root {
-    --sig-cyan: #2fc6f6;    /* verified / calm / live */
-    --sig-indigo: #5b6ef0;  /* primary interactive: focus, links, active */
-    --sig-magenta: #c33be1; /* emphasis, gradient terminus */
-    --sig-gradient: linear-gradient(90deg, #2fc6f6 0%, #5b6ef0 48%, #c33be1 100%);
-  }
-
   * {
     @apply border-border outline-ring/50;
   }
@@ -178,20 +168,9 @@
     @apply bg-background text-foreground;
     overflow-x: clip;
   }
-  /* keyboard navigation: brand focus ring (Drift Indigo) on dark ground */
+  /* keyboard navigation: a visible, consistent focus ring on dark ground */
   :focus-visible {
-    outline: 2px solid var(--sig-indigo);
+    outline: 2px solid rgba(255, 255, 255, 0.7);
     outline-offset: 2px;
-  }
-}
-
-@layer utilities {
-  /* brand gradient as a fill (bars/meters) */
-  .sig-gradient-bar {
-    background-image: var(--sig-gradient);
-  }
-  /* brand accent for mono eyebrow labels */
-  .sig-eyebrow {
-    color: var(--sig-cyan);
   }
 }

@@ -70,14 +70,8 @@ export function EquityChart({ points, id }: { points: EquityPoint[]; id: string 
       >
         <defs>
           <linearGradient id={`${id}-fill`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="rgba(91,110,240,0.18)" />
-            <stop offset="100%" stopColor="rgba(91,110,240,0)" />
-          </linearGradient>
-          {/* Signal Terminal brand gradient along the curve: cyan → indigo → magenta */}
-          <linearGradient id={`${id}-stroke`} x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#2fc6f6" />
-            <stop offset="55%" stopColor="#5b6ef0" />
-            <stop offset="100%" stopColor="#c33be1" />
+            <stop offset="0%" stopColor="rgba(255,255,255,0.14)" />
+            <stop offset="100%" stopColor="rgba(255,255,255,0)" />
           </linearGradient>
         </defs>
 
@@ -102,7 +96,7 @@ export function EquityChart({ points, id }: { points: EquityPoint[]; id: string 
         <path
           d={path}
           fill="none"
-          stroke={`url(#${id}-stroke)`}
+          stroke="#fff"
           strokeWidth="1.75"
           vectorEffect="non-scaling-stroke"
           pathLength={1}

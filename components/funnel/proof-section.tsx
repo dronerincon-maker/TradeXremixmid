@@ -36,7 +36,7 @@ export function ProofSection() {
   return (
     <section id="proof" className="relative w-full scroll-mt-8 py-28">
       <div className="mx-auto w-full max-w-5xl px-6">
-        <DecodeText text="THE EVIDENCE" className="sig-eyebrow block text-xs font-medium uppercase" duration={500} />
+        <DecodeText text="THE EVIDENCE" className="block text-xs font-medium uppercase text-zinc-500" duration={500} />
         <DecodeText
           as="h2"
           text="Inspect the data. Gross and net."

@@ -30,7 +30,7 @@ export function ScrollProgress() {
   return (
     <div
       aria-hidden
-      className="sig-gradient-bar fixed left-0 top-0 z-[60] h-px"
+      className="fixed left-0 top-0 z-[60] h-px bg-white"
       style={{ width: `${progress * 100}%`, transition: "width 80ms linear" }}
     />
   )

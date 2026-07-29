@@ -25,7 +25,7 @@ function SeatsMeter({ seatsRemaining, seatCap }: { seatsRemaining: number; seatC
         aria-valuemax={seatCap}
         aria-label="Founding seats taken"
       >
-        <div className="sig-gradient-bar h-full transition-[width] duration-700" style={{ width: `${pct}%` }} />
+        <div className="h-full bg-white transition-[width] duration-700" style={{ width: `${pct}%` }} />
       </div>
       <p className="font-mono text-[10px] tracking-[0.1em] text-zinc-600">
         REAL SEATS. THE COUNTER REFLECTS ACTUAL CONFIRMED MEMBERS: NO TIMERS.
