@@ -6,11 +6,42 @@ import './globals.css'
 const geistSans = Geist({ subsets: ['latin'], variable: '--font-geist-sans' })
 const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' })
 
+const SITE_DESCRIPTION =
+  'A charter-tier automated execution algo suite for funded prop traders. 50 founding seats. Application required.'
+
+// Resolves relative OG/Twitter image URLs to absolute ones. Uses the explicit
+// site URL when provided, otherwise Vercel's production URL, else localhost.
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : 'http://localhost:3000')
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: 'TradeXLabs | Founder Pro',
-  description:
-    'A charter-tier automated execution algo suite for funded prop traders. 50 founding seats. Application required.',
+  description: SITE_DESCRIPTION,
   generator: 'v0.app',
+  openGraph: {
+    title: 'TradeXLabs | Founder Pro',
+    description: SITE_DESCRIPTION,
+    siteName: 'TradeXLabs',
+    type: 'website',
+    images: [
+      {
+        url: '/og-image.webp',
+        width: 1200,
+        height: 675,
+        alt: 'TradeXLabs — Signal through the noise',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'TradeXLabs | Founder Pro',
+    description: SITE_DESCRIPTION,
+    images: ['/og-image.webp'],
+  },
 }
 
 export const viewport: Viewport = {

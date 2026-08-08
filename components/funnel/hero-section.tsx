@@ -13,6 +13,7 @@
  */
 
 import { useRef } from "react"
+import { motion } from "framer-motion"
 import { ChevronDown, Play } from "lucide-react"
 import { gsap, useGSAP, SplitText, ScrollTrigger } from "@/lib/gsap"
 import { PixelCard } from "./pixel-card"
@@ -112,8 +113,8 @@ export function HeroSection() {
         {/* VSL frame: revealed by the scrub */}
         {!reduce && (
           <div className="pointer-events-none absolute inset-0 z-[1] grid place-items-center p-6">
-            <div className="hero-vsl pointer-events-auto grid aspect-video w-[min(920px,92%)] place-items-center rounded-3xl border border-white/10 bg-[#050505] opacity-0 will-change-transform">
-              <VslPlaceholder />
+            <div className="hero-vsl pointer-events-auto aspect-video w-[min(920px,92%)] overflow-hidden rounded-3xl border border-white/10 bg-[#050505] opacity-0 will-change-transform">
+              <VslFrame />
             </div>
           </div>
         )}
@@ -147,8 +148,8 @@ export function HeroSection() {
       {/* reduced motion: VSL stacks below instead of scrub-revealing */}
       {reduce && (
         <div className="grid place-items-center px-6 pb-24">
-          <div className="grid aspect-video w-[min(920px,92%)] place-items-center rounded-3xl border border-white/10 bg-[#050505]">
-            <VslPlaceholder />
+          <div className="aspect-video w-[min(920px,92%)] overflow-hidden rounded-3xl border border-white/10 bg-[#050505]">
+            <VslFrame />
           </div>
         </div>
       )}
@@ -156,13 +157,45 @@ export function HeroSection() {
   )
 }
 
-function VslPlaceholder() {
+/**
+ * VSL frame: Higgsfield-generated monochrome orderflow poster with a
+ * darkening overlay so the play control reads. The play button pulses and
+ * scales on hover via framer-motion.
+ */
+function VslFrame() {
   return (
-    <div className="flex flex-col items-center gap-5">
-      <span className="grid size-14 place-items-center rounded-full border border-white/15 bg-white/[0.04]">
-        <Play className="ml-0.5 size-5 text-white/70" strokeWidth={1.5} />
-      </span>
-      <span className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-600">See the algos in action</span>
+    <div className="group relative grid h-full w-full place-items-center">
+      <img
+        src="/hero-vsl-poster.webp"
+        alt="TradeXLabs automated algorithms — live market data visualization"
+        className="absolute inset-0 h-full w-full object-cover"
+        loading="lazy"
+      />
+      <div
+        aria-hidden
+        className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/25 to-black/70"
+      />
+      <motion.button
+        type="button"
+        aria-label="Play video"
+        whileHover={{ scale: 1.08 }}
+        whileTap={{ scale: 0.94 }}
+        transition={{ type: "spring", stiffness: 380, damping: 22 }}
+        className="relative flex flex-col items-center gap-5"
+      >
+        <span className="relative grid size-16 place-items-center rounded-full border border-white/25 bg-white/[0.06] backdrop-blur-sm">
+          <motion.span
+            aria-hidden
+            className="absolute inset-0 rounded-full border border-white/30"
+            animate={{ scale: [1, 1.55], opacity: [0.6, 0] }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: "easeOut" }}
+          />
+          <Play className="ml-0.5 size-6 text-white" strokeWidth={1.5} />
+        </span>
+        <span className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-300">
+          See the algos in action
+        </span>
+      </motion.button>
     </div>
   )
 }

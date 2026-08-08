@@ -1,6 +1,7 @@
 "use client"
 
 import { useRef } from "react"
+import { motion } from "framer-motion"
 import { gsap, useGSAP } from "@/lib/gsap"
 import { DecodeText, Reveal } from "./motion"
 
@@ -97,26 +98,40 @@ export function SuiteSection() {
 
 function AlgoCard({ algo, mobile }: { algo: Algo; mobile?: boolean }) {
   return (
-    <article
-      className={`flex flex-col justify-between border border-white/10 bg-white/[0.02] p-8 ${
+    <motion.article
+      whileHover={{ y: -6 }}
+      transition={{ type: "spring", stiffness: 320, damping: 24 }}
+      className={`group relative flex flex-col justify-between overflow-hidden border border-white/10 bg-white/[0.02] p-8 transition-colors duration-300 hover:border-white/30 ${
         mobile ? "h-48 w-full" : "h-72 w-80 shrink-0"
       } ${algo.roadmap ? "border-dashed" : ""}`}
     >
-      <div className="flex items-center justify-between">
+      {/* Higgsfield-generated orderflow texture, revealed on hover */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-0 transition-opacity duration-500 group-hover:opacity-[0.18]"
+        style={{ backgroundImage: "url(/suite-texture.webp)" }}
+      />
+      <div className="relative flex items-center justify-between">
         <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-zinc-500">Algorithm</span>
         <span
           className={`text-[10px] font-medium uppercase tracking-[0.2em] ${
             algo.tag === "LIVE" ? "text-white" : "text-zinc-500"
           }`}
         >
-          {algo.tag === "LIVE" && <span className="mr-1.5 inline-block size-1.5 rounded-full bg-white align-middle" />}
+          {algo.tag === "LIVE" && (
+            <motion.span
+              className="mr-1.5 inline-block size-1.5 rounded-full bg-white align-middle"
+              animate={{ opacity: [1, 0.35, 1] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            />
+          )}
           {algo.tag}
         </span>
       </div>
-      <div>
+      <div className="relative">
         <h3 className="text-2xl font-semibold tracking-tight text-white text-pretty">{algo.name}</h3>
         <p className="mt-3 text-sm leading-relaxed text-zinc-400">{algo.fn}</p>
       </div>
-    </article>
+    </motion.article>
   )
 }

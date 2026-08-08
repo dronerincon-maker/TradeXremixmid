@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import { AnimatePresence, motion } from "framer-motion"
 import { X, Check } from "lucide-react"
 import { useFunnel } from "./funnel-context"
 
@@ -78,52 +79,71 @@ export function ApplicationForm() {
     }
   }
 
-  if (!applyOpen) return null
-
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-label="Apply for a founding seat"
-      className="fixed inset-0 z-[70] flex items-start justify-center overflow-y-auto bg-black/80 p-4 backdrop-blur-sm sm:items-center sm:p-6"
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) closeApply()
-      }}
-    >
-      <div
-        ref={dialogRef}
-        className="relative my-8 w-full max-w-lg border border-white/10 bg-[#0a0a0a] p-6 sm:p-8"
-      >
-        <button
-          type="button"
-          onClick={closeApply}
-          aria-label="Close"
-          className="absolute right-4 top-4 text-zinc-500 transition-colors hover:text-white"
+    <AnimatePresence>
+      {applyOpen && (
+        <motion.div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Apply for a founding seat"
+          className="fixed inset-0 z-[70] flex items-start justify-center overflow-y-auto bg-black/80 p-4 backdrop-blur-sm sm:items-center sm:p-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget) closeApply()
+          }}
         >
-          <X className="size-5" />
-        </button>
-
-        {status === "success" ? (
-          <div className="py-8 text-center">
-            <div className="mx-auto flex size-12 items-center justify-center rounded-full border border-white/20">
-              <Check className="size-6 text-white" />
-            </div>
-            <h3 className="mt-6 text-2xl font-semibold tracking-tight text-white">Application received</h3>
-            <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-zinc-400">
-              We review every application individually. If it&apos;s a fit, we&apos;ll reach out with next steps. Not
-              every applicant is accepted.
-            </p>
+          <motion.div
+            ref={dialogRef}
+            className="relative my-8 w-full max-w-lg border border-white/10 bg-[#0a0a0a] p-6 sm:p-8"
+            initial={{ opacity: 0, y: 24, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 16, scale: 0.98 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          >
             <button
               type="button"
               onClick={closeApply}
-              className="mt-8 rounded-full bg-white px-8 py-3 text-sm font-semibold text-black transition-colors hover:bg-zinc-200"
+              aria-label="Close"
+              className="absolute right-4 top-4 text-zinc-500 transition-colors hover:text-white"
             >
-              Close
+              <X className="size-5" />
             </button>
-          </div>
-        ) : (
-          <>
-            <p className="text-xs font-medium uppercase tracking-[0.28em] text-zinc-500">Founding Charter</p>
+
+            {status === "success" ? (
+              <motion.div
+                key="success"
+                className="py-8 text-center"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <motion.div
+                  className="mx-auto flex size-12 items-center justify-center rounded-full border border-white/20"
+                  initial={{ scale: 0.4, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 18, delay: 0.1 }}
+                >
+                  <Check className="size-6 text-white" />
+                </motion.div>
+                <h3 className="mt-6 text-2xl font-semibold tracking-tight text-white">Application received</h3>
+                <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-zinc-400">
+                  We review every application individually. If it&apos;s a fit, we&apos;ll reach out with next steps. Not
+                  every applicant is accepted.
+                </p>
+                <button
+                  type="button"
+                  onClick={closeApply}
+                  className="mt-8 rounded-full bg-white px-8 py-3 text-sm font-semibold text-black transition-colors hover:bg-zinc-200"
+                >
+                  Close
+                </button>
+              </motion.div>
+            ) : (
+              <>
+                <p className="text-xs font-medium uppercase tracking-[0.28em] text-zinc-500">Founding Charter</p>
             <h3 className="mt-3 text-2xl font-semibold tracking-tight text-white">Apply for a seat</h3>
             <p className="mt-2 text-sm text-zinc-500">No payment on this page. Application only.</p>
 
@@ -226,10 +246,12 @@ export function ApplicationForm() {
                 Beyond-program capital is optional context, never a requirement.
               </p>
             </form>
-          </>
-        )}
-      </div>
-    </div>
+              </>
+            )}
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   )
 }
 

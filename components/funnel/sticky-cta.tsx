@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { AnimatePresence, motion } from "framer-motion"
 import { ApplyButton } from "./apply-button"
 
 export function StickyCta() {
@@ -26,21 +27,25 @@ export function StickyCta() {
   }, [])
 
   return (
-    <div
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-black/80 backdrop-blur-md"
-      style={{
-        transform: visible ? "translateY(0)" : "translateY(100%)",
-        transition: "transform 400ms cubic-bezier(0.16,1,0.3,1)",
-      }}
-    >
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
-        <p className="text-sm text-zinc-300">
-          <span className="font-medium text-white">TradeXLabs</span>
-          <span className="mx-2 text-zinc-600">·</span>
-          <span className="text-zinc-400">50 founding seats</span>
-        </p>
-        <ApplyButton className="px-6 py-2.5 text-xs">Apply</ApplyButton>
-      </div>
-    </div>
+    <AnimatePresence>
+      {visible && (
+        <motion.div
+          initial={{ y: "100%" }}
+          animate={{ y: 0 }}
+          exit={{ y: "100%" }}
+          transition={{ type: "spring", stiffness: 260, damping: 30 }}
+          className="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-black/80 backdrop-blur-md"
+        >
+          <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
+            <p className="text-sm text-zinc-300">
+              <span className="font-medium text-white">TradeXLabs</span>
+              <span className="mx-2 text-zinc-600">·</span>
+              <span className="text-zinc-400">50 founding seats</span>
+            </p>
+            <ApplyButton className="px-6 py-2.5 text-xs">Apply</ApplyButton>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   )
 }
