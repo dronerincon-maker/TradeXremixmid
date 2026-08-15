@@ -5,9 +5,9 @@ import { TxPrismGrid } from "./tx-prism-grid"
 import { DecodeText, Parallax, Reveal } from "./motion"
 
 const LINES = [
-  "One breach ends a funded account.",
-  "Every added account multiplies error.",
-  "Discipline decays at 2 a.m.",
+  "One rule breach ends a funded account.",
+  "Every account you add multiplies the room for error.",
+  "Discipline decays at 2 a.m. — the algorithms don't.",
 ]
 
 export function ProblemSection() {

@@ -130,8 +130,8 @@ export function ApplicationForm() {
                 </motion.div>
                 <h3 className="mt-6 text-2xl font-semibold tracking-tight text-white">Application received</h3>
                 <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-zinc-400">
-                  We review every application individually. If it&apos;s a fit, we&apos;ll reach out with next steps. Not
-                  every applicant is accepted.
+                  We read every application by hand. If it&apos;s a fit, we&apos;ll reach out with next steps within a
+                  few business days. Not everyone is accepted — and that&apos;s the point.
                 </p>
                 <button
                   type="button"
@@ -145,7 +145,7 @@ export function ApplicationForm() {
               <>
                 <p className="text-xs font-medium uppercase tracking-[0.28em] text-zinc-500">Founding Charter</p>
             <h3 className="mt-3 text-2xl font-semibold tracking-tight text-white">Apply for a seat</h3>
-            <p className="mt-2 text-sm text-zinc-500">No payment on this page. Application only.</p>
+            <p className="mt-2 text-sm text-zinc-500">No card, no checkout — this is an application. A few details so we can see if it&apos;s a fit.</p>
 
             <form className="mt-6 space-y-5" onSubmit={onSubmit}>
               <Field label="Full name" htmlFor="name">
@@ -232,7 +232,7 @@ export function ApplicationForm() {
               </div>
 
               {status === "error" && (
-                <p className="text-sm text-zinc-300">Something went wrong. Please try again.</p>
+                <p className="text-sm text-zinc-300">That didn&apos;t go through. Check your connection and try again.</p>
               )}
 
               <button
@@ -243,7 +243,7 @@ export function ApplicationForm() {
                 {status === "submitting" ? "Submitting…" : "Submit application"}
               </button>
               <p className="text-center text-xs text-zinc-600">
-                Beyond-program capital is optional context, never a requirement.
+                Capital beyond your funded accounts is optional context — never a requirement.
               </p>
             </form>
               </>

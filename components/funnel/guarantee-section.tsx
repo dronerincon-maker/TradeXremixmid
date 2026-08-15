@@ -23,9 +23,9 @@ export function GuaranteeSection() {
           duration={500}
         />
         <h2 className="mt-10 text-balance text-3xl font-semibold leading-tight tracking-[-0.03em] text-white sm:text-4xl md:text-5xl">
-          A 6-month guarantee on our work.
+          A six-month guarantee on our work.
           <br className="hidden sm:block" />{" "}
-          <span className="text-zinc-400">Never on profit: nobody honest promises that.</span>
+          <span className="text-zinc-400">Never on profit — nobody honest promises that.</span>
         </h2>
       </Parallax>
     </section>

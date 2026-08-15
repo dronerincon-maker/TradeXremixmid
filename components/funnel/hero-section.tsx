@@ -140,7 +140,7 @@ export function HeroSection() {
           onClick={scrollToVsl}
           className="hero-cue absolute bottom-6 left-1/2 z-[2] flex -translate-x-1/2 flex-col items-center gap-2 text-white/55 transition-colors hover:text-white"
         >
-          <span className="text-[11px] uppercase tracking-[0.3em]">See our automated algos in action</span>
+          <span className="text-[11px] uppercase tracking-[0.3em]">Watch the suite execute</span>
           <ChevronDown className="size-4 animate-bounce" />
         </button>
       </div>
@@ -193,7 +193,7 @@ function VslFrame() {
           <Play className="ml-0.5 size-6 text-white" strokeWidth={1.5} />
         </span>
         <span className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-300">
-          See the algos in action
+          See the algorithms run
         </span>
       </motion.button>
     </div>

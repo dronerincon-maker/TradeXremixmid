@@ -7,7 +7,7 @@ const geistSans = Geist({ subsets: ['latin'], variable: '--font-geist-sans' })
 const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' })
 
 const SITE_DESCRIPTION =
-  'A charter-tier automated execution algo suite for funded prop traders. 50 founding seats. Application required.'
+  'Institutional-grade automated execution for funded futures traders. The full algorithm suite runs on a preloaded, exchange-proximate server you control — you keep every decision. 50 founding seats. Application only.'
 
 // Resolves relative OG/Twitter image URLs to absolute ones. Uses the explicit
 // site URL when provided, otherwise Vercel's production URL, else localhost.
@@ -19,11 +19,11 @@ const SITE_URL =
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: 'TradeXLabs | Founder Pro',
+  title: 'TradeXLabs | Automated Execution for Funded Traders',
   description: SITE_DESCRIPTION,
   generator: 'v0.app',
   openGraph: {
-    title: 'TradeXLabs | Founder Pro',
+    title: 'TradeXLabs | Automated Execution for Funded Traders',
     description: SITE_DESCRIPTION,
     siteName: 'TradeXLabs',
     type: 'website',
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'TradeXLabs | Founder Pro',
+    title: 'TradeXLabs | Automated Execution for Funded Traders',
     description: SITE_DESCRIPTION,
     images: ['/og-image.webp'],
   },

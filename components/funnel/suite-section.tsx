@@ -13,12 +13,12 @@ type Algo = {
 }
 
 const ALGOS: Algo[] = [
-  { name: "ORB V1–V4", fn: "Opening-range breakout across four regimes.", tag: "LIVE" },
-  { name: "Quant Pivots", fn: "Pivot-anchored mean-reversion on index futures.", tag: "LIVE" },
-  { name: "Trend Engine", fn: "Multi-asset trend-following with regime filters.", tag: "LIVE" },
-  { name: "Session Fade", fn: "Liquidity-sweep reversals at session extremes.", tag: "LIVE" },
-  { name: "Volatility Grid", fn: "Adaptive sizing keyed to realized volatility.", tag: "LIVE" },
-  { name: "+ four more as they ship", fn: "Founding members inherit every release.", tag: "ROADMAP", roadmap: true },
+  { name: "ORB V1–V4", fn: "Opening-range breakouts, tuned across four market regimes.", tag: "LIVE" },
+  { name: "Quant Pivots", fn: "Pivot-anchored mean reversion on index futures.", tag: "LIVE" },
+  { name: "Trend Engine", fn: "Multi-asset trend-following with built-in regime filters.", tag: "LIVE" },
+  { name: "Session Fade", fn: "Liquidity-sweep reversals at the session's extremes.", tag: "LIVE" },
+  { name: "Volatility Grid", fn: "Position sizing that adapts to realized volatility.", tag: "LIVE" },
+  { name: "+ four more as they ship", fn: "Founding members inherit every release — no upgrade fee, ever.", tag: "ROADMAP", roadmap: true },
 ]
 
 export function SuiteSection() {
@@ -69,7 +69,7 @@ export function SuiteSection() {
           <DecodeText text="THE SUITE" className="block text-xs font-medium uppercase text-zinc-500" duration={500} />
           <DecodeText
             as="h2"
-            text="Six institutional algorithms. One standard."
+            text="Six institutional algorithms. One standard of execution."
             className="mt-6 block max-w-3xl text-balance text-4xl font-semibold tracking-[-0.03em] text-white sm:text-5xl"
             duration={700}
           />

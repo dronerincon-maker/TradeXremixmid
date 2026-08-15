@@ -119,7 +119,7 @@ export function TaasIntroSection() {
           delay={100}
           className="mt-8 max-w-xl text-balance text-center text-sm leading-relaxed text-zinc-500 sm:text-base"
         >
-          One suite. Every algorithm, every account, every session. Executed by machines that never blink.
+          One suite. Every algorithm, every account, every session — executed by machines that never tilt, never hesitate, never sleep.
         </Reveal>
       </div>
     </section>

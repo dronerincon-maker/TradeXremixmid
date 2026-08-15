@@ -78,7 +78,8 @@ export function InfrastructureSection() {
         </SlideIn>
 
         <Reveal delay={200} as="p" className="mt-8 max-w-2xl text-lg text-zinc-400">
-          You keep every decision. We never touch your capital.
+          Racked, configured, and deployed before you log in. You keep every decision — we never touch your capital,
+          your keys, or your fills.
         </Reveal>
       </div>
     </section>

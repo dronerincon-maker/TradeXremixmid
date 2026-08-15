@@ -53,16 +53,16 @@ export function EntrySection() {
 
         <div className="mt-12 space-y-2">
           <Reveal as="p" className="text-lg text-zinc-300">
-            Founding members grandfather into everything we ship.
+            Founding members are grandfathered into every algorithm and upgrade we ship — at the founding rate, for good.
           </Reveal>
           <Reveal delay={80} as="p" className="text-lg text-zinc-500">
-            When it&apos;s full, it&apos;s full.
+            When the fifty are gone, the charter closes. When it&apos;s full, it&apos;s full.
           </Reveal>
         </div>
 
         <Reveal delay={160} className="mt-12">
           <ApplyButton>Apply for a seat</ApplyButton>
-          <p className="mt-4 text-sm text-zinc-600">Application required. Not every applicant is accepted.</p>
+          <p className="mt-4 text-sm text-zinc-600">Application only. We read every one, and not everyone is accepted.</p>
         </Reveal>
       </div>
     </section>

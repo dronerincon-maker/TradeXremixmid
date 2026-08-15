@@ -8,17 +8,17 @@ const COLUMNS = [
   {
     icon: FileText,
     title: "SOPs & firm playbooks",
-    body: "Standard operating procedures tuned to each firm's rules, so nothing gets breached by accident.",
+    body: "Standard operating procedures mapped to each firm's rulebook — so nothing breaches by accident.",
   },
   {
     icon: PhoneCall,
     title: "Weekly live desk call",
-    body: "A recurring operator call to review conditions, deployment, and account management.",
+    body: "A standing operator call to read the week's conditions, deployment, and risk across every account you run.",
   },
   {
     icon: LineChart,
     title: "Track-record portal",
-    body: "Documented member results, logged and labeled: never presented as typical or guaranteed.",
+    body: "Member results, logged and timestamped as they happen — never dressed up as typical or guaranteed.",
   },
 ]
 
